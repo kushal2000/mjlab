@@ -90,13 +90,13 @@ class NativeMujocoViewer(BaseViewer):
     self.pert = mujoco.MjvPerturb() if self.enable_perturbations else None
     self.vopt = mujoco.MjvOption()
 
-    # self._term_names = [
-    #   name
-    #   for name, _ in self.env.unwrapped.reward_manager.get_active_iterable_terms(
-    #     self.env_idx
-    #   )
-    # ]
-    # self._init_reward_plots(self._term_names)
+    self._term_names = [
+      name
+      for name, _ in self.env.unwrapped.reward_manager.get_active_iterable_terms(
+        self.env_idx
+      )
+    ]
+    self._init_reward_plots(self._term_names)
 
     assert self.mjm is not None
     assert self.mjd is not None
@@ -104,7 +104,7 @@ class NativeMujocoViewer(BaseViewer):
       self.mjm,
       self.mjd,
       key_callback=self._safe_key_callback,
-      show_left_ui=False,
+      show_left_ui=True,
       show_right_ui=False,
     )
     if self.viewer is None:
@@ -149,26 +149,26 @@ class NativeMujocoViewer(BaseViewer):
       # )
       # v.set_texts(overlay)
 
-      # if self._show_plots and self._term_names:
-      #   terms = list(
-      #     self.env.unwrapped.reward_manager.get_active_iterable_terms(self.env_idx)
-      #   )
-      #   if not self._is_paused:
-      #     for name, arr in terms:
-      #       if name in self._histories:
-      #         self._append_point(name, float(arr[0]))
-      #         self._write_history_to_figure(name)
+      if self._show_plots and self._term_names:
+        terms = list(
+          self.env.unwrapped.reward_manager.get_active_iterable_terms(self.env_idx)
+        )
+        if not self._is_paused:
+          for name, arr in terms:
+            if name in self._histories:
+              self._append_point(name, float(arr[0]))
+              self._write_history_to_figure(name)
 
-      #   viewports = compute_viewports(len(self._term_names), v.viewport, self._plot_cfg)
-      #   viewport_figs = [
-      #     (viewports[i], self._figures[self._term_names[i]])
-      #     for i in range(
-      #       min(len(viewports), len(self._term_names), self._plot_cfg.max_viewports)
-      #     )
-      #   ]
-      #   v.set_figures(viewport_figs)
-      # else:
-      #   v.set_figures([])
+        viewports = compute_viewports(len(self._term_names), v.viewport, self._plot_cfg)
+        viewport_figs = [
+          (viewports[i], self._figures[self._term_names[i]])
+          for i in range(
+            min(len(viewports), len(self._term_names), self._plot_cfg.max_viewports)
+          )
+        ]
+        v.set_figures(viewport_figs)
+      else:
+        v.set_figures([])
 
       v.user_scn.ngeom = 0
       if hasattr(self.env.unwrapped, "update_visualizers"):
