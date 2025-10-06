@@ -207,7 +207,7 @@ class EventCfg:
   """Configuration for randomization."""
   reset_scene_to_default: EventTerm = term(
     EventTerm,
-    func=mdp.reset_scene_to_default,
+    func=mdp.reset_to_default,
     mode="reset",
   )
   

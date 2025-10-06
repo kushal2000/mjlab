@@ -31,7 +31,7 @@ class AllegroHandInHandEnvCfg(InHandManipulationEnvCfg):
         ang_vel=(0.0, 0.0, 0.0),
       ),
     )
-    breakpoint()
+    # breakpoint()
     
     # Set up scene with robot and object
     self.scene.entities = {

@@ -16,6 +16,27 @@ if TYPE_CHECKING:
   from mjlab.envs.manager_based_rl_env import ManagerBasedRlEnv
 
 
+def reset_to_default(env: ManagerBasedEnv, env_ids: torch.Tensor) -> None:
+  for entity in env.scene.entities.values():
+    if not isinstance(entity, Entity):
+      continue
+    print(f"Resetting entity to default")
+    try:
+      default_root_state = entity.data.default_root_state[env_ids].clone()
+      default_root_state[:, 0:3] += env.scene.env_origins[env_ids]
+      entity.write_root_state_to_sim(default_root_state, env_ids=env_ids)
+    except:
+      print(f"Error writing root state to sim for entity")
+
+    try:
+      default_joint_pos = entity.data.default_joint_pos[env_ids].clone()
+      default_joint_vel = entity.data.default_joint_vel[env_ids].clone()
+      entity.write_joint_state_to_sim(
+        default_joint_pos, default_joint_vel, env_ids=env_ids
+      )
+    except:
+      print(f"Error writing joint state to sim for entity")
+
 def reset_joints_within_limits_range(
   env: ManagerBasedRlEnv,
   env_ids: torch.Tensor,
@@ -52,5 +73,5 @@ def reset_joints_within_limits_range(
     asset.data.write_joint_state(default_pos, default_vel, env_ids=env_ids)
 
 
-__all__ = ["reset_joints_within_limits_range"]
+__all__ = ["reset_joints_within_limits_range", "reset_to_default"]
 
