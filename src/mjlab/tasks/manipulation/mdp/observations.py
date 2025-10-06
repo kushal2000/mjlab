@@ -28,6 +28,8 @@ def root_pos_w(
     Root position in environment frame. Shape (num_envs, 3).
   """
   asset: Entity = env.scene[asset_cfg.name]
+  print(asset.data.root_link_pos_w)
+  print(env.scene.env_origins)
   return asset.data.root_link_pos_w - env.scene.env_origins
 
 

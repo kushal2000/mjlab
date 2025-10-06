@@ -13,7 +13,6 @@ from pathlib import Path
 import mujoco
 
 from mjlab.entity import EntityArticulationInfoCfg, EntityCfg
-from mjlab.utils.spec_config import ActuatorCfg
 
 # Paths
 _CURRENT_DIR = Path(__file__).parent
@@ -59,12 +58,6 @@ INIT_STATE = EntityCfg.InitialStateCfg(
   joint_vel={},  # Empty dict to skip keyframe vel
 )
 
-# Actuator configuration
-# NOTE: The Allegro hand XML already defines position actuators for all joints.
-# We don't add additional actuators via ActuatorCfg to avoid duplicates.
-# If you need to modify actuator parameters, edit the XML file directly or 
-# create a custom spec_fn that modifies the actuators.
-
 ALLEGRO_ARTICULATION = EntityArticulationInfoCfg(
   actuators=(),  # Empty tuple - XML already has actuators
   soft_joint_pos_limit_factor=1.0,
@@ -90,22 +83,11 @@ ALLEGRO_ACTION_SCALE = 1.0
 
 
 if __name__ == "__main__":
-  """Test loading the Allegro hand model."""
   import mujoco.viewer as viewer
-  
+
   from mjlab.entity.entity import Entity
-  
-  print("Loading Allegro right hand...")
+
   robot = Entity(ALLEGRO_RIGHT_HAND_CFG)
-  model = robot.spec.compile()
-  
-  print(f"✓ Model loaded successfully!")
-  print(f"  Bodies: {model.nbody}")
-  print(f"  Joints: {model.njnt}")
-  print(f"  Actuators: {model.nu}")
-  print(f"  DOF: {model.nv}")
-  print()
-  print("Launching MuJoCo viewer...")
-  
-  viewer.launch(model)
+
+  viewer.launch(robot.spec.compile())
 

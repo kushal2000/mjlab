@@ -42,7 +42,6 @@ def reset_joints_within_limits_range(
   # 2. Sample positions within specified ranges
   # 3. Apply operation (scale or add) relative to default or limits
   # 4. Set joint positions and velocities for specified env_ids
-  
   asset: Entity = env.scene[asset_cfg.name]
   num_envs_to_reset = len(env_ids)
   

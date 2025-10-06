@@ -8,49 +8,30 @@ from dataclasses import dataclass, replace
 from pathlib import Path
 
 from mjlab.entity import EntityCfg
-from mjlab.tasks.manipulation.hands import create_allegro_hand_cfg
 from mjlab.tasks.manipulation.inhand_env_cfg import InHandManipulationEnvCfg
-from mjlab.tasks.manipulation.objects import CUBE_CFG
+from mjlab.tasks.manipulation.objects import get_cube_spec
+from mjlab.asset_zoo.robots.allegro_hand.allegro_constants import ALLEGRO_RIGHT_HAND_CFG
 
 
 @dataclass
 class AllegroHandInHandEnvCfg(InHandManipulationEnvCfg):
   """Allegro Hand in-hand manipulation environment configuration.
-  
-  This environment trains the Allegro hand to reorient a cube to random target orientations.
-  
-  The Allegro hand XML is included in the asset_zoo, so no additional installation needed.
-  
-  To use this configuration:
-  
-  1. **Run visualization test**:
-     ```bash
-     python -m mjlab.tasks.manipulation.example_usage
-     ```
-  
-  2. **Train**:
-     ```bash
-     python train.py --task mjlab.tasks.manipulation.config.allegro.inhand_env_cfg:AllegroHandInHandEnvCfg
-     ```
   """
 
   def __post_init__(self):
     # Create Allegro hand configuration (uses built-in model from asset_zoo)
-    allegro_cfg = create_allegro_hand_cfg(hand_type="right")
+    allegro_cfg = ALLEGRO_RIGHT_HAND_CFG
     
-    # Create cube object configuration
-    # Position cube very close to the hand for in-hand manipulation
-    # Hand is at (0, 0, 0.5) with rotation - cube should be nearly at same position
-    from mjlab.tasks.manipulation.objects import get_cube_spec
     cube_cfg = EntityCfg(
       spec_fn=lambda: get_cube_spec(size=0.025, mass=0.08),  # 2.5cm half-size = 5cm cube
       init_state=EntityCfg.InitialStateCfg(
-        pos=(0.0, 0.0, 0.74),  # Very close to hand, just slightly above
+        pos=(0.0, 0.0, 0.94),  # Very close to hand, just slightly above
         rot=(1.0, 0.0, 0.0, 0.0),
         lin_vel=(0.0, 0.0, 0.0),
         ang_vel=(0.0, 0.0, 0.0),
       ),
     )
+    breakpoint()
     
     # Set up scene with robot and object
     self.scene.entities = {
@@ -98,26 +79,4 @@ class AllegroHandInHandEnvCfg_PLAY(AllegroHandInHandEnvCfg):
     
     # Reduce number of environments for visualization
     self.scene.num_envs = 1
-
-
-# Example: Custom object configuration
-@dataclass
-class AllegroHandInHandSphereEnvCfg(AllegroHandInHandEnvCfg):
-  """Allegro Hand in-hand manipulation with a sphere object."""
-
-  def __post_init__(self):
-    super().__post_init__()
-    
-    # Replace cube with sphere
-    from mjlab.tasks.manipulation.objects import SPHERE_CFG
-    
-    sphere_cfg = replace(
-      SPHERE_CFG,
-      init_state=replace(
-        SPHERE_CFG.init_state,
-        pos=(0.0, -0.19, 0.56),
-      ),
-    )
-    
-    self.scene.entities["object"] = sphere_cfg
 

@@ -107,42 +107,9 @@ def get_cylinder_spec(
   
   return spec
 
-
-# Pre-configured object entities
-
-CUBE_CFG = EntityCfg(
-  spec_fn=get_cube_spec,
-  init_state=EntityCfg.InitialStateCfg(
-    pos=(0.0, 0.0, 0.5),
-    rot=(1.0, 0.0, 0.0, 0.0),
-    lin_vel=(0.0, 0.0, 0.0),
-    ang_vel=(0.0, 0.0, 0.0),
-  ),
-)
-
-SPHERE_CFG = EntityCfg(
-  spec_fn=get_sphere_spec,
-  init_state=EntityCfg.InitialStateCfg(
-    pos=(0.0, 0.0, 0.5),
-    rot=(1.0, 0.0, 0.0, 0.0),
-  ),
-)
-
-CYLINDER_CFG = EntityCfg(
-  spec_fn=get_cylinder_spec,
-  init_state=EntityCfg.InitialStateCfg(
-    pos=(0.0, 0.0, 0.5),
-    rot=(1.0, 0.0, 0.0, 0.0),
-  ),
-)
-
-
 __all__ = [
   "get_cube_spec",
   "get_sphere_spec",
   "get_cylinder_spec",
-  "CUBE_CFG",
-  "SPHERE_CFG",
-  "CYLINDER_CFG",
 ]
 

@@ -86,9 +86,6 @@ VIEWER_CONFIG = ViewerConfig(
 @dataclass
 class CommandsCfg:
   """Command specifications for the MDP."""
-
-  # NOTE: Command generation uses placeholder CommandTerm - rewards/observations that depend on
-  # commands will need proper implementation of InHandReOrientationCommand class
   object_pose: mdp.InHandReOrientationCommandCfg = term(
     mdp.InHandReOrientationCommandCfg,
     asset_name="object",
@@ -105,25 +102,13 @@ class CommandsCfg:
 @dataclass
 class ActionsCfg:
   """Action specifications for the MDP."""
-
-  # Using placeholder JointPositionActionCfg until EMAJointPositionToLimitsAction is implemented
-  from mjlab.envs.mdp.actions.actions_config import JointPositionActionCfg
-
-  joint_pos: JointPositionActionCfg = term(
-    JointPositionActionCfg,
+  joint_pos: mdp.JointPositionActionCfg = term(
+    mdp.JointPositionActionCfg,
     asset_name="robot",
     actuator_names=[".*"],
     scale=1.0,
     use_default_offset=True,
   )
-  # TODO: Switch to EMAJointPositionToLimitsActionCfg once implemented:
-  # joint_pos: mdp.EMAJointPositionToLimitsActionCfg = term(
-  #     mdp.EMAJointPositionToLimitsActionCfg,
-  #     asset_name="robot",
-  #     actuator_names=[".*"],
-  #     alpha=0.95,
-  #     rescale_to_limits=True,
-  # )
 
 
 @dataclass
@@ -220,36 +205,12 @@ class ObservationsCfg:
 @dataclass
 class EventCfg:
   """Configuration for randomization."""
-
-  # NOTE: Events using mdp.reset_joints_within_limits_range are placeholders
-  # The full implementation is needed for proper randomization
-
-  # Startup events
-  # robot_physics_material: EventTerm = term(
-  #     EventTerm,
-  #     func=mdp.randomize_rigid_body_material,
-  #     mode="startup",
-  #     params={
-  #         "asset_cfg": SceneEntityCfg("robot", body_names=".*"),
-  #         "static_friction_range": (0.7, 1.3),
-  #         "dynamic_friction_range": (0.7, 1.3),
-  #         "restitution_range": (0.0, 0.0),
-  #         "num_buckets": 250,
-  #     },
-  # )
-
-  # Reset events
-  # reset_object: EventTerm = term(
-  #     EventTerm,
-  #     func=mdp.reset_root_state_uniform,
-  #     mode="reset",
-  #     params={
-  #         "pose_range": {"x": [-0.01, 0.01], "y": [-0.01, 0.01], "z": [-0.01, 0.01]},
-  #         "velocity_range": {},
-  #         "asset_cfg": SceneEntityCfg("object"),
-  #     },
-  # )
-
+  reset_scene_to_default: EventTerm = term(
+    EventTerm,
+    func=mdp.reset_scene_to_default,
+    mode="reset",
+  )
+  
   reset_robot_joints: EventTerm = term(
     EventTerm,
     func=mdp.reset_joints_within_limits_range,
