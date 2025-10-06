@@ -28,7 +28,7 @@ class RandomPolicy:
     def __call__(self, observations):
         """Generate random actions for the given observations."""
         batch_size = observations.shape[0]
-        return torch.rand(batch_size, 12) * 2 - 1
+        return torch.rand(batch_size, 16) * 2 - 1
 
 
 def run_play(
